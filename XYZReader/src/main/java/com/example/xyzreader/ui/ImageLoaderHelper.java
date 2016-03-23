@@ -10,8 +10,10 @@ import com.android.volley.toolbox.Volley;
 
 public class ImageLoaderHelper {
     private static ImageLoaderHelper sInstance;
+    private RequestQueue mRequestQueue;
+    private Context context;
 
-    public static ImageLoaderHelper getInstance(Context context) {
+    public static synchronized ImageLoaderHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new ImageLoaderHelper(context.getApplicationContext());
         }
@@ -23,7 +25,9 @@ public class ImageLoaderHelper {
     private ImageLoader mImageLoader;
 
     private ImageLoaderHelper(Context applicationContext) {
-        RequestQueue queue = Volley.newRequestQueue(applicationContext);
+        context = applicationContext;
+        //RequestQueue queue = Volley.newRequestQueue(applicationContext);
+        mRequestQueue = getRequestQueue();
         ImageLoader.ImageCache imageCache = new ImageLoader.ImageCache() {
             @Override
             public void putBitmap(String key, Bitmap value) {
@@ -35,10 +39,21 @@ public class ImageLoaderHelper {
                 return mImageCache.get(key);
             }
         };
-        mImageLoader = new ImageLoader(queue, imageCache);
+        mImageLoader = new ImageLoader(mRequestQueue, imageCache);
     }
 
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }
+
+
+    public RequestQueue getRequestQueue()   {
+        if(mRequestQueue==null) {
+            mRequestQueue= Volley.newRequestQueue(context);
+        }
+        return mRequestQueue;
+    }
+
+
+
 }

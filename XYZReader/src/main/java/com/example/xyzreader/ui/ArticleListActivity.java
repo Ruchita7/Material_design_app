@@ -37,6 +37,8 @@ public class ArticleListActivity extends ActionBarActivity implements
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private boolean mIsRefreshing = false;
+    Adapter mAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,14 @@ public class ArticleListActivity extends ActionBarActivity implements
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
-        final View toolbarContainerView = findViewById(R.id.toolbar_container);
+ //       final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new Adapter(null);
+        mRecyclerView.setAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
@@ -62,7 +67,7 @@ public class ArticleListActivity extends ActionBarActivity implements
         startService(new Intent(this, UpdaterService.class));
     }
 
-    @Override
+   @Override
     protected void onStart() {
         super.onStart();
         registerReceiver(mRefreshingReceiver,
@@ -75,7 +80,7 @@ public class ArticleListActivity extends ActionBarActivity implements
         unregisterReceiver(mRefreshingReceiver);
     }
 
-    private boolean mIsRefreshing = false;
+
 
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
@@ -98,9 +103,10 @@ public class ArticleListActivity extends ActionBarActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        Adapter adapter = new Adapter(cursor);
+        /*Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);*/
+        mAdapter.swapCursor(cursor);
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
@@ -109,7 +115,8 @@ public class ArticleListActivity extends ActionBarActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mRecyclerView.setAdapter(null);
+       // mRecyclerView.setAdapter(null);
+        mAdapter.swapCursor(null);
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -158,7 +165,13 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         @Override
         public int getItemCount() {
+            if(null==mCursor)   return 0;
             return mCursor.getCount();
+        }
+
+        public void swapCursor(Cursor cursor)       {
+            mCursor = cursor;
+            notifyDataSetChanged();
         }
     }
 

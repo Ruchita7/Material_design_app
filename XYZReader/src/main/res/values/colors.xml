@@ -22,4 +22,7 @@
     <color name="theme_primary_dark">#04561A</color>
     <color name="theme_accent">#04561A</color>
     <color name="ltgray">#ffe0e0e0</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="light_blue_700">#0288D1</color>
+    <color name="deep_orange_200">#FF5722</color>
 </resources>

@@ -22,7 +22,7 @@ public class DynamicHeightNetworkImageView extends NetworkImageView {
 
     public void setAspectRatio(float aspectRatio) {
         mAspectRatio = aspectRatio;
-        requestLayout();
+      //  requestLayout();
     }
 
     @Override
