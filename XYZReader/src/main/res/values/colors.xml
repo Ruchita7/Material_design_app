@@ -25,4 +25,7 @@
     <color name="light_blue_500">#03A9F4</color>
     <color name="light_blue_700">#0288D1</color>
     <color name="deep_orange_200">#FF5722</color>
+    <color name="pink_200">#FF4081</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="white">#FFFFFF</color>
 </resources>
