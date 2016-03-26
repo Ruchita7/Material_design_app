@@ -20,7 +20,8 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/photo_placeholder" />
+            android:background="@color/photo_placeholder"
+          />
 
         <TextView
             android:id="@+id/article_title"
@@ -29,7 +30,7 @@
             android:layout_margin="@dimen/list_item_margin"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
-            android:maxLines="4"
+            android:maxLines="4" />
             android:textAppearance="?android:textAppearanceListItem" />
 
         <TextView
@@ -47,4 +48,7 @@
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
+
+
+
 <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/layout/list_item_article.xml -->
