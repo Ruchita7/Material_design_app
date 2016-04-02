@@ -8,10 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,11 +55,22 @@ public class ArticleListActivity extends ActionBarActivity implements
     public static final String TRANSITION_NAME=null;
     private String mTransitionName;
     Context mContext;
+    int mItemPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
+       /* if(savedInstanceState!=null)    {
+            if(savedInstanceState.get("POSITION")!=null)
+            Log.v(ArticleListActivity.class.getSimpleName(),"position is"+savedInstanceState.get("POSITION"));
+        }*/
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -68,12 +82,19 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
+
         mAdapter = new Adapter(null);
         mRecyclerView.setAdapter(mAdapter);
 
 
         getLoaderManager().initLoader(0, null, this);
 
+        if(sharedPreferences.contains("POSITION"))
+        {
+            // Log.v(ArticleListActivity.class.getSimpleName(),"position is"+ getIntent().getLongExtra("POSITION",0));
+            mItemPosition = sharedPreferences.getInt("POSITION", 0);
+
+        }
         if (savedInstanceState == null) {
             refresh();
         }
@@ -95,6 +116,7 @@ public class ArticleListActivity extends ActionBarActivity implements
         super.onStop();
         unregisterReceiver(mRefreshingReceiver);
     }
+
 
 
 
@@ -127,6 +149,7 @@ public class ArticleListActivity extends ActionBarActivity implements
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
+        mRecyclerView.smoothScrollToPosition(mItemPosition);
     }
 
     @Override

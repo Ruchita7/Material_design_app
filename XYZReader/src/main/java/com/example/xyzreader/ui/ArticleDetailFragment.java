@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -52,28 +54,37 @@ import java.util.HashMap;
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = "ArticleDetailFragment";
-
     public static final String ARG_ITEM_ID = "item_id";
+    private static final String TAG = "ArticleDetailFragment";
     private static final float PARALLAX_FACTOR = 1.25f;
-
+    final String LOG_TAG = ArticleDetailFragment.class.getSimpleName();
+    String mTransitionName;
+    long mItemId;
     private Cursor mCursor;
-
     private View mRootView;
     private int mMutedColor = 0xFF333333;
     private ObservableScrollView mScrollView;
     private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
-
     private int mTopInset;
     private View mPhotoContainerView;
     private ImageView mPhotoView;
+    private final Callback mImageCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            scheduleStartPostponedTransition();
+        }
+
+        @Override
+        public void onError() {
+            scheduleStartPostponedTransition();
+        }
+    };
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
     private float mAspectRatio;
-   String mTransitionName;
-    long mItemId;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -81,14 +92,28 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId,long itemID) {
+    public static ArticleDetailFragment newInstance(long itemId, int position) {
         Bundle arguments = new Bundle();
-       arguments.putLong("POSITION", itemID);
+        arguments.putInt("POSITION", position);
         arguments.putLong(ARG_ITEM_ID, itemId);
-      //  arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
+        //  arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    static float progress(float v, float min, float max) {
+        return constrain((v - min) / (max - min), 0, 1);
+    }
+
+    static float constrain(float val, float min, float max) {
+        if (val < min) {
+            return min;
+        } else if (val > max) {
+            return max;
+        } else {
+            return val;
+        }
     }
 
     @Override
@@ -122,7 +147,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
@@ -148,9 +173,9 @@ public class ArticleDetailFragment extends Fragment implements
 
        /* if(getArguments().containsKey(ArticleListActivity.TRANSITION_NAME)&&(getArguments().getString(ArticleListActivity.TRANSITION_NAME)!=null)) {
             mTransitionName = getArguments().getString(ArticleListActivity.TRANSITION_NAME);*/
-            // if(mTransitionName!=null)
+        // if(mTransitionName!=null)
 
-            mPhotoView.setTransitionName(getString(R.string.image_resource)+"_"+getArguments().getLong("POSITION"));
+        mPhotoView.setTransitionName(getString(R.string.image_resource) + "_" + getArguments().getInt("POSITION"));
         //}
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
@@ -167,8 +192,8 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 
-     bindViews();
-        updateStatusBar();
+     //   bindViews();
+      //  updateStatusBar();
         return mRootView;
     }
 
@@ -187,32 +212,18 @@ public class ArticleDetailFragment extends Fragment implements
         mDrawInsetsFrameLayout.setInsetBackground(mStatusBarColorDrawable);
     }
 
-    static float progress(float v, float min, float max) {
-        return constrain((v - min) / (max - min), 0, 1);
-    }
-
-    static float constrain(float val, float min, float max) {
-        if (val < min) {
-            return min;
-        } else if (val > max) {
-            return max;
-        } else {
-            return val;
-        }
-    }
-
     private void bindViews() {
         if (mRootView == null) {
             return;
         }
 
         TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
-       // articleTitle = titleView.getText().toString();
+        // articleTitle = titleView.getText().toString();
 
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
-     //   bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        //   bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -228,7 +239,7 @@ public class ArticleDetailFragment extends Fragment implements
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
                             + "</font>"));
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
-           mAspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
+            mAspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
            /* ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -250,14 +261,14 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });*/
-            Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+         //   Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
 
-      RequestCreator requestCreator = Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
-           requestCreator.noFade();
+            RequestCreator requestCreator = Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+            requestCreator.noFade();
             requestCreator.into(mPhotoView, mImageCallback);
 
 
-                ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
@@ -265,7 +276,7 @@ public class ArticleDetailFragment extends Fragment implements
                             if (bitmap != null) {
                                 Palette p = Palette.generate(bitmap, 12);
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
-                              //  mPhotoView.setImageBitmap(imageContainer.getBitmap());
+                                //  mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
@@ -289,7 +300,7 @@ public class ArticleDetailFragment extends Fragment implements
                             .setBackgroundColor(mMutedColor);
                     updateStatusBar();
                 }*/
-                    //.into(mPhotoView)
+            //.into(mPhotoView)
         /*    Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(new Target() {
                 @Override
                 public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -376,7 +387,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
 
-            scheduleStartPostponedTransition();
+        scheduleStartPostponedTransition();
 
 
     }
@@ -398,18 +409,25 @@ public class ArticleDetailFragment extends Fragment implements
                 : mPhotoView.getHeight() - mScrollY;
     }
 
+/*
 
-    private final Callback mImageCallback = new Callback() {
-        @Override
-        public void onSuccess() {
-            scheduleStartPostponedTransition();
-        }
+    @Override
+    public void setReturnTransition(Transition transition) {
+        super.setReturnTransition(transition);
+        Log.v(LOG_TAG,"in setReturnTransition");
+    }
 
-        @Override
-        public void onError() {
-            scheduleStartPostponedTransition();
-        }
-    };
+    @Override
+    public void setExitTransition(Transition transition) {
+        super.setExitTransition(transition);
+        Log.v(LOG_TAG, "in setExitTransition");
+    }
 
 
+
+    @Override
+    public void setExitSharedElementCallback(SharedElementCallback callback) {
+        super.setExitSharedElementCallback(callback);
+        Log.v(LOG_TAG, "in setExitSharedElementCallback");
+    }*/
 }
