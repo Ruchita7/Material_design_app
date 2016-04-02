@@ -9,7 +9,8 @@ import android.widget.ImageView;
  */
 public class AspectRatioImageViewer extends ImageView{
 
-    private float mAspectRatio = 0.6f;
+   // private float mAspectRatio = 0.6f;
+   private float mAspectRatio =  1.5f;
 
     public AspectRatioImageViewer(Context context) {
         super(context);

@@ -38,7 +38,7 @@ public class ArticleDetailActivity extends ActionBarActivity
     private View mUpButtonContainer;
     private View mUpButton;
     String mTransition;
-
+    long mItemPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +48,18 @@ public class ArticleDetailActivity extends ActionBarActivity
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
         setContentView(R.layout.activity_article_detail);
-
+        postponeEnterTransition();
         getLoaderManager().initLoader(0, null, this);
+        mItemPosition = getIntent().getIntExtra("POSITION",0);
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
                 mSelectedItemId = mStartId;
-                if(getIntent().getStringExtra(ArticleListActivity.TRANSITION_NAME)!=null)
+           /*     if(getIntent().getStringExtra(ArticleListActivity.TRANSITION_NAME)!=null)
                 {
                     mTransition = getIntent().getStringExtra(ArticleListActivity.TRANSITION_NAME);
-                    postponeEnterTransition();
-                }
+
+                }*/
 
             }
         }
@@ -114,6 +115,7 @@ public class ArticleDetailActivity extends ActionBarActivity
 
 
     }
+
 
 
     @Override
@@ -178,7 +180,7 @@ public class ArticleDetailActivity extends ActionBarActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID),mTransition);
+            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID),mItemPosition);
         }
 
         @Override

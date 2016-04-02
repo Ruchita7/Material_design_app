@@ -21,13 +21,15 @@
         <item name="colorPrimary">@color/light_blue_500</item>
         <item name="colorPrimaryDark">@color/light_blue_700</item>
         <item name="colorAccent">@color/pink_200</item>
-        <item name="android:windowContentTransitions">true</item>
+
     </style>
 
+    <style name="Theme.Bacon.Main" parent="@style/Theme.Bacon"/>
+    <style name="Theme.Bacon.Detail"  parent="@style/Theme.Bacon"/>
 
-    <style name="Theme.Bacon.Detail">
+    <!--style name="Theme.Bacon.Detail"  parent="@style/Theme.Bacon.Main">
         <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
+    </style-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

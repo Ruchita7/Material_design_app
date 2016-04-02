@@ -241,4 +241,17 @@
     </style>
     <style name="Platform.ThemeOverlay.AppCompat.Dark"/>
     <style name="Platform.ThemeOverlay.AppCompat.Light"/>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values-v21/styles.xml -->
+    <eat-comment/>
+    <style name="Theme.Bacon.Details" parent="@style/Theme.Bacon">
+        <!--item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/details_window_enter_transition</item>
+        <item name="android:windowReturnTransition">@transition/details_window_return_transition</item-->
+        <item name="android:windowSharedElementEnterTransition">@transition/shared_photo</item>
+    </style>
+    <style name="Theme.Bacon.Main" parent="@style/Theme.Bacon">
+    <!--item name="android:windowContentTransitions">true</item-->
+        <item name="android:windowExitTransition">@transition/grid_exit</item>
+        <item name="android:windowReenterTransition">@transition/grid_reenter</item>
+    </style>
 </resources>

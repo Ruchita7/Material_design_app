@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +21,14 @@ import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +36,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
+
+
+import java.io.InputStream;
+import java.util.HashMap;
 
 /**
  * A fragment representing a single Article detail screen. This fragment is
@@ -43,7 +58,7 @@ public class ArticleDetailFragment extends Fragment implements
     private static final float PARALLAX_FACTOR = 1.25f;
 
     private Cursor mCursor;
-    private long mItemId;
+
     private View mRootView;
     private int mMutedColor = 0xFF333333;
     private ObservableScrollView mScrollView;
@@ -58,6 +73,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mStatusBarFullOpacityBottom;
     private float mAspectRatio;
    String mTransitionName;
+    long mItemId;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -65,10 +81,11 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId,String transitionName) {
+    public static ArticleDetailFragment newInstance(long itemId,long itemID) {
         Bundle arguments = new Bundle();
+       arguments.putLong("POSITION", itemID);
         arguments.putLong(ARG_ITEM_ID, itemId);
-        arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
+      //  arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -129,12 +146,12 @@ public class ArticleDetailFragment extends Fragment implements
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
-        if(getArguments().containsKey(ArticleListActivity.TRANSITION_NAME)&&(getArguments().getString(ArticleListActivity.TRANSITION_NAME)!=null)) {
-            mTransitionName = getArguments().getString(ArticleListActivity.TRANSITION_NAME);
+       /* if(getArguments().containsKey(ArticleListActivity.TRANSITION_NAME)&&(getArguments().getString(ArticleListActivity.TRANSITION_NAME)!=null)) {
+            mTransitionName = getArguments().getString(ArticleListActivity.TRANSITION_NAME);*/
             // if(mTransitionName!=null)
 
-            mPhotoView.setTransitionName(mTransitionName);
-        }
+            mPhotoView.setTransitionName(getString(R.string.image_resource)+"_"+getArguments().getLong("POSITION"));
+        //}
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -150,7 +167,7 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 
-        bindViews();
+     bindViews();
         updateStatusBar();
         return mRootView;
     }
@@ -212,7 +229,7 @@ public class ArticleDetailFragment extends Fragment implements
                             + "</font>"));
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
            mAspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
-            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+           /* ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
@@ -221,12 +238,35 @@ public class ArticleDetailFragment extends Fragment implements
                                 Palette p = Palette.generate(bitmap, 12);
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                //    mPhotoView.setTransitionName(articleTitle);
-                               // mPhotoView.setAspectRatio(mAspectRatio);
-                          /*      if(mPhotoView.getTransitionName()!=null)
-                                {
-                                    scheduleStartPostponedTransition(mPhotoView);
-                                }*/
+
+                                mRootView.findViewById(R.id.meta_bar)
+                                        .setBackgroundColor(mMutedColor);
+                                updateStatusBar();
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                        }
+                    });*/
+            Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+
+      RequestCreator requestCreator = Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+           requestCreator.noFade();
+            requestCreator.into(mPhotoView, mImageCallback);
+
+
+                ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                            Bitmap bitmap = imageContainer.getBitmap();
+                            if (bitmap != null) {
+                                Palette p = Palette.generate(bitmap, 12);
+                                mMutedColor = p.getDarkMutedColor(0xFF333333);
+                              //  mPhotoView.setImageBitmap(imageContainer.getBitmap());
+
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
                                 updateStatusBar();
@@ -238,24 +278,79 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });
+       /*     try     {
+                InputStream imageStream = getActivity().getContentResolver().openInputStream(uri);
+                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+
+                if (bitmap != null) {
+                    Palette p = Palette.generate(bitmap, 12);
+                    mMutedColor = p.getDarkMutedColor(0xFF333333);
+                    mRootView.findViewById(R.id.meta_bar)
+                            .setBackgroundColor(mMutedColor);
+                    updateStatusBar();
+                }*/
+                    //.into(mPhotoView)
+        /*    Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(new Target() {
+                @Override
+                public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                    // Save the bitmap or do something with it here
+
+                    //Set it in the ImageView
+                    mPhotoView.setImageBitmap(bitmap);
+                    if (bitmap != null) {
+                        Palette p = Palette.generate(bitmap, 12);
+                        mMutedColor = p.getDarkMutedColor(0xFF333333);
+                        mRootView.findViewById(R.id.meta_bar)
+                                .setBackgroundColor(mMutedColor);
+                        updateStatusBar();
+                    }
+                    scheduleStartPostponedTransition();
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+            });*/
+
+
+     /*   } catch (Exception ex) {
+            Log.e("MainActivity", "error in creating palette");
+       }*/
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
-            bylineView.setText("N/A" );
+            bylineView.setText("N/A");
             bodyView.setText("N/A");
         }
     }
 
-    private void scheduleStartPostponedTransition(final View sharedElement) {
-        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+    private void scheduleStartPostponedTransition() {
+  /*      mPhotoView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
-                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
                         getActivity().startPostponedEnterTransition();
                         return true;
                     }
-                });
+                });*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.getViewTreeObserver().addOnPreDrawListener(
+                    new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            getActivity().startPostponedEnterTransition();
+                            return true;
+                        }
+                    });
+        }
     }
 
     @Override
@@ -281,7 +376,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
 
-            scheduleStartPostponedTransition(mPhotoView);
+            scheduleStartPostponedTransition();
 
 
     }
@@ -302,4 +397,19 @@ public class ArticleDetailFragment extends Fragment implements
                 ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
     }
+
+
+    private final Callback mImageCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            scheduleStartPostponedTransition();
+        }
+
+        @Override
+        public void onError() {
+            scheduleStartPostponedTransition();
+        }
+    };
+
+
 }

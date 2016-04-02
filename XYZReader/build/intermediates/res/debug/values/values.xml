@@ -1645,11 +1645,10 @@
         <item name="colorPrimary">@color/light_blue_500</item>
         <item name="colorPrimaryDark">@color/light_blue_700</item>
         <item name="colorAccent">@color/pink_200</item>
-        <item name="android:windowContentTransitions">true</item>
+
     </style>
-    <style name="Theme.Bacon.Detail">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
+    <style name="Theme.Bacon.Detail" parent="@style/Theme.Bacon"/>
+    <style name="Theme.Bacon.Main" parent="@style/Theme.Bacon"/>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <style name="ThemeOverlay.AppCompat" parent="Base.ThemeOverlay.AppCompat"/>

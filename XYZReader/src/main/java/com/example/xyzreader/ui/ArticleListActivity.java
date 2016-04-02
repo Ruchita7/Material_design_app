@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,17 +20,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.squareup.picasso.Picasso;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -47,6 +51,7 @@ public class ArticleListActivity extends ActionBarActivity implements
     Adapter mAdapter = null;
     public static final String TRANSITION_NAME=null;
     private String mTransitionName;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
+        mContext = this;
  //       final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -145,18 +150,19 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
-           /* final ViewHolder vh = new ViewHolder(view);
+            View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
+            final ViewHolder vh = new ViewHolder(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())), ArticleListActivity.this, ArticleDetailActivity.class);
+                   intent.putExtra("POSITION",vh.getAdapterPosition());
+                    ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, getString(R.string.image_resource) + "_" +vh.getAdapterPosition());
+                    startActivity(intent, transitionActivityOptions.toBundle());
                 }
             });
-            return vh;*/
-            return new ViewHolder(view);
+            return vh;
         }
 
         @Override
@@ -173,56 +179,64 @@ public class ArticleListActivity extends ActionBarActivity implements
                             DateUtils.FORMAT_ABBREV_ALL).toString()
                             + " by "
                             + mCursor.getString(ArticleLoader.Query.AUTHOR));
-            holder.thumbnailView.setImageUrl(
+           /*holder.thumbnailView.setImageUrl(
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
-                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
+                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());*/
+            Picasso.with(mContext).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).into(holder.thumbnailView);
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
-            mTransitionName =getString(R.string.image_resource)+"_"+position;
+
+            mTransitionName = getString(R.string.image_resource) + "_" + position;
             holder.thumbnailView.setTransitionName(mTransitionName);
 
-            holder.view.setOnClickListener(new View.OnClickListener() {
+        /*    holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    /*startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(holder.getAdapterPosition()))));*/
+
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(holder.getAdapterPosition())),ArticleListActivity.this, ArticleDetailActivity.class);
-               //     String transition = holder.titleView.getText().toString();
-                    intent.putExtra(TRANSITION_NAME,mTransitionName);
-                   // intent.setAction(Intent.ACTION_VIEW);
-                  //  View sharedView = blueIconImageView;
 
-                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this, holder.thumbnailView, mTransitionName);
+                    intent.putExtra(TRANSITION_NAME,mTransitionName);
+                    ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this, holder.thumbnailView, mTransitionName);
                     startActivity(intent, transitionActivityOptions.toBundle());
                 }
-            });
+            });*/
+                       /*startActivity(new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(holder.getAdapterPosition()))));*/
+            //     String transition = holder.titleView.getText().toString();
+            // intent.setAction(Intent.ACTION_VIEW);
+            //  View sharedView = blueIconImageView;
+
+
         }
 
         @Override
         public int getItemCount() {
-            if(null==mCursor)   return 0;
+            if (null == mCursor) return 0;
             return mCursor.getCount();
         }
 
-        public void swapCursor(Cursor cursor)       {
+        public void swapCursor(Cursor cursor) {
             mCursor = cursor;
             notifyDataSetChanged();
         }
     }
+        //  }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public DynamicHeightNetworkImageView thumbnailView;
-        public TextView titleView;
-        public TextView subtitleView;
-        public final View view;
+        public class ViewHolder extends RecyclerView.ViewHolder  {
+            //  public DynamicHeightNetworkImageView thumbnailView;
+            public AspectRatioImageViewer thumbnailView;
+            public TextView titleView;
+            public TextView subtitleView;
+            //  public final View view;
 
-        public ViewHolder(View view) {
-            super(view);
-            this.view = view;
-            thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
-            titleView = (TextView) view.findViewById(R.id.article_title);
-            subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
-        }
+            public ViewHolder(View view) {
+                super(view);
+                //    this.view = view;
+                thumbnailView = (AspectRatioImageViewer) view.findViewById(R.id.thumbnail);
+                titleView = (TextView) view.findViewById(R.id.article_title);
+                subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+
+            }
     }
 }
