@@ -26,13 +26,14 @@
 
         <TextView
             android:id="@+id/article_title"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/list_item_margin"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="4" />
-        android:textAppearance="?android:textAppearanceListItem" />
+        />
 
         <TextView
             android:id="@+id/article_subtitle"

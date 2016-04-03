@@ -4,12 +4,17 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 /**
- * Created by dgnc on 4/2/2016.
+ *  This class is used to implement tab transitions on viewpager.Source - android documentation
  */
 public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.85f;
     private static final float MIN_ALPHA = 0.5f;
 
+    /**
+     *
+     * @param view
+     * @param position
+     */
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
         int pageHeight = view.getHeight();

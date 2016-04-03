@@ -24,7 +24,7 @@
                 <ImageView
                     android:id="@+id/photo"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
 
@@ -98,29 +98,17 @@
         </FrameLayout>
     </com.example.xyzreader.ui.ObservableScrollView>
 
-    <!--ImageButton
-        android:id="@+id/share_fab"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:background="@drawable/add_fab_background"
-        android:contentDescription="@string/action_share"
-        android:elevation="@dimen/fab_elevation"
-        android:src="@drawable/ic_share"
-        android:stateListAnimator="@anim/fab_state_list_anim" /-->
-
+    <!--Used FloatingActionButton from support library-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end|right"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_share_white"
         app:elevation="@dimen/fab_elevation"
         app:fabSize="normal"
-        android:layout_gravity="bottom|end|right"
         app:pressedTranslationZ="@dimen/fab_pressed_elevation" />
 
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>

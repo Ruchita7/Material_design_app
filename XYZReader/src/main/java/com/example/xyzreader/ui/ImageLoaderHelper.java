@@ -8,11 +8,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+//This class is used to load bitmaps for photo image
 public class ImageLoaderHelper {
     private static ImageLoaderHelper sInstance;
     private RequestQueue mRequestQueue;
     private Context context;
 
+    /**
+     *
+     * @param context
+     * @return
+     */
     public static synchronized ImageLoaderHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new ImageLoaderHelper(context.getApplicationContext());
@@ -24,6 +30,10 @@ public class ImageLoaderHelper {
     private final LruCache<String, Bitmap> mImageCache = new LruCache<String, Bitmap>(20);
     private ImageLoader mImageLoader;
 
+    /**
+     *
+     * @param applicationContext
+     */
     private ImageLoaderHelper(Context applicationContext) {
         context = applicationContext;
         //RequestQueue queue = Volley.newRequestQueue(applicationContext);
@@ -42,6 +52,10 @@ public class ImageLoaderHelper {
         mImageLoader = new ImageLoader(mRequestQueue, imageCache);
     }
 
+    /**
+     *
+     * @return
+     */
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }

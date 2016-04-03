@@ -39,21 +39,42 @@ public class DrawInsetsFrameLayout extends FrameLayout {
     private Rect mTempRect = new Rect();
     private OnInsetsCallback mOnInsetsCallback;
 
+    /**
+     *
+     * @param context
+     */
     public DrawInsetsFrameLayout(Context context) {
         super(context);
         init(context, null, 0);
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public DrawInsetsFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public DrawInsetsFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs, defStyle);
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.DrawInsetsFrameLayout, defStyle, 0);
@@ -64,6 +85,10 @@ public class DrawInsetsFrameLayout extends FrameLayout {
         a.recycle();
     }
 
+    /**
+     *
+     * @param insetBackground
+     */
     public void setInsetBackground(Drawable insetBackground) {
         if (mInsetBackground != null) {
             mInsetBackground.setCallback(null);
@@ -88,6 +113,7 @@ public class DrawInsetsFrameLayout extends FrameLayout {
         }
     }
 
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -96,10 +122,20 @@ public class DrawInsetsFrameLayout extends FrameLayout {
         }
     }
 
+    /**
+     *
+     * @param onInsetsCallback
+     */
+
     public void setOnInsetsCallback(OnInsetsCallback onInsetsCallback) {
         mOnInsetsCallback = onInsetsCallback;
     }
 
+    /**
+     *
+     * @param insets
+     * @return
+     */
     @Override
     public WindowInsets onApplyWindowInsets(WindowInsets insets) {
         insets = super.onApplyWindowInsets(insets);
@@ -116,6 +152,10 @@ public class DrawInsetsFrameLayout extends FrameLayout {
         return insets;
     }
 
+    /**
+     *
+     * @param canvas
+     */
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);

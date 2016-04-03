@@ -9,13 +9,6 @@
         <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\okhttp-3.1.2-88d51f24c386bfe8a232e78151ad5716141356b3.jar" />
     </item>
     <item
-        jar="C:\Users\dgnc\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-20a19ac68ff839a5f09c52e6fb1d26b6eebd8454.jar" />
-    </item>
-    <item
         jar="D:\xyzreader\XYZReader\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\classes.jar"
         jumboMode="false"
         revision="23.0.1"
@@ -23,11 +16,32 @@
         <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\classes-147ac97e7b5eb36a2d3145c0a90468c4c21c64d0.jar" />
     </item>
     <item
+        jar="C:\Users\dgnc\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-20a19ac68ff839a5f09c52e6fb1d26b6eebd8454.jar" />
+    </item>
+    <item
         jar="D:\xyzreader\XYZReader\build\intermediates\exploded-aar\com.android.support\palette-v7\23.1.1\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="a978650837318cf056bf3383ff02fe7a3b891f20">
         <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\classes-6cb67173a0288bbaf02863417bd97d31607a0176.jar" />
+    </item>
+    <item
+        jar="C:\Users\dgnc\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.5.2\7446d06ec8d4f7ffcc53f1da37c95f200dcb9387\picasso-2.5.2.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\picasso-2.5.2-f7a99fb31914cad8fc6dfab789eb9ce7e592ec47.jar" />
+    </item>
+    <item
+        jar="D:\xyzreader\XYZReader\build\intermediates\exploded-aar\com.android.support\design\23.1.1\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\classes-c38f304c0d35904b74ef8d66cb1b53e45472e5af.jar" />
     </item>
     <item
         jar="C:\Users\dgnc\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.6.0\98476622f10715998eacf9240d6b479f12c66143\okio-1.6.0.jar"
@@ -49,13 +63,6 @@
         revision="23.0.1"
         sha1="5c5699834e9722f1c288fea2de82725d078ba127">
         <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\classes-e4abcbf26e7b3664c36c82bee6c3f23579b9fbcf.jar" />
-    </item>
-    <item
-        jar="C:\Users\dgnc\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.5.2\7446d06ec8d4f7ffcc53f1da37c95f200dcb9387\picasso-2.5.2.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
-        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\picasso-2.5.2-f7a99fb31914cad8fc6dfab789eb9ce7e592ec47.jar" />
     </item>
     <item
         jar="D:\xyzreader\XYZReader\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\libs\internal_impl-23.1.1.jar"
@@ -98,13 +105,6 @@
         revision="23.0.1"
         sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
         <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\butterknife-7.0.1-4b13ca1c9f8e1000845b47c7ab167579149e5d91.jar" />
-    </item>
-    <item
-        jar="D:\xyzreader\XYZReader\build\intermediates\exploded-aar\com.android.support\design\23.1.1\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
-        <dex dex="D:\xyzreader\XYZReader\build\intermediates\pre-dexed\debug\classes-c38f304c0d35904b74ef8d66cb1b53e45472e5af.jar" />
     </item>
 
 </items>

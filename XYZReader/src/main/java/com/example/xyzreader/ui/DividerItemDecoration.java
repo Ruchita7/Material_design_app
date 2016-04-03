@@ -24,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+//Unused class
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
@@ -38,11 +39,19 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
+    /**
+     * @param context
+     * @param resId
+     * @param orientation
+     */
     public DividerItemDecoration(Context context, int resId, int orientation) {
         mDivider = ContextCompat.getDrawable(context, resId);
         setOrientation(orientation);
     }
 
+    /**
+     * @param orientation
+     */
     public void setOrientation(int orientation) {
         if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
             throw new IllegalArgumentException("invalid orientation");
@@ -50,7 +59,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         mOrientation = orientation;
     }
 
-   @Override
+    /**
+     * @param c
+     * @param parent
+     * @param state
+     */
+    @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {
             drawVertical(c, parent);
@@ -60,7 +74,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
 
-
+    /**
+     * @param c
+     * @param parent
+     */
     public void drawVertical(Canvas c, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getWidth() - parent.getPaddingRight();
@@ -77,6 +94,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
+    /**
+     * @param c
+     * @param parent
+     */
     public void drawHorizontal(Canvas c, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
@@ -94,6 +115,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
 
+    /**
+     * @param outRect
+     * @param view
+     * @param parent
+     * @param state
+     */
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {

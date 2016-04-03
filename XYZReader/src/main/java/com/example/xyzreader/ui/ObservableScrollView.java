@@ -28,10 +28,22 @@ import android.widget.ScrollView;
 public class ObservableScrollView extends ScrollView {
     private Callbacks mCallbacks;
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public ObservableScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     *
+     * @param l
+     * @param t
+     * @param oldl
+     * @param oldt
+     */
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
@@ -40,6 +52,14 @@ public class ObservableScrollView extends ScrollView {
         }
     }
 
+    /**
+     *
+     * @param changed
+     * @param l
+     * @param t
+     * @param r
+     * @param b
+     */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -50,6 +70,10 @@ public class ObservableScrollView extends ScrollView {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int computeVerticalScrollRange() {
         return super.computeVerticalScrollRange();

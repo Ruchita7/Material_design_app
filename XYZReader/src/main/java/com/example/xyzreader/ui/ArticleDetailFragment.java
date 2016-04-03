@@ -2,38 +2,27 @@ package com.example.xyzreader.ui;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.transition.Slide;
-import android.transition.Transition;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
@@ -41,12 +30,6 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
-
-
-import java.io.InputStream;
-import java.util.HashMap;
-
 import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
@@ -60,8 +43,8 @@ public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String POSITION="position";
-   // private static final String TAG = "ArticleDetailFragment";
+    public static final String POSITION = "position";
+
     private static final float PARALLAX_FACTOR = 1.25f;
     final String LOG_TAG = ArticleDetailFragment.class.getSimpleName();
     String mTransitionName;
@@ -88,7 +71,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     @BindDimen(R.dimen.detail_card_top_margin)
-     int mStatusBarFullOpacityBottom;
+    int mStatusBarFullOpacityBottom;
     private float mAspectRatio;
 
     /**
@@ -98,6 +81,9 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
+    /**
+     * Callback for loading photo image view
+     */
     private final Callback mImageCallback = new Callback() {
         @Override
         public void onSuccess() {
@@ -110,20 +96,37 @@ public class ArticleDetailFragment extends Fragment implements
         }
     };
 
+    /**
+     * @param itemId
+     * @param position
+     * @return
+     */
     public static ArticleDetailFragment newInstance(long itemId, int position) {
         Bundle arguments = new Bundle();
+        //save in bundle item position and id
         arguments.putInt(POSITION, position);
         arguments.putLong(ARG_ITEM_ID, itemId);
-        //  arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
 
+    /**
+     * @param v
+     * @param min
+     * @param max
+     * @return
+     */
     static float progress(float v, float min, float max) {
         return constrain((v - min) / (max - min), 0, 1);
     }
 
+    /**
+     * @param val
+     * @param min
+     * @param max
+     * @return
+     */
     static float constrain(float val, float min, float max) {
         if (val < min) {
             return min;
@@ -134,6 +137,9 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +149,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
-        //mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
     }
 
@@ -151,6 +156,9 @@ public class ArticleDetailFragment extends Fragment implements
         return (ArticleDetailActivity) getActivity();
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -162,13 +170,19 @@ public class ArticleDetailFragment extends Fragment implements
         getLoaderManager().initLoader(0, null, this);
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        //use butterknife for component binding
         ButterKnife.bind(this, mRootView);
 
-        // mDrawInsetsFrameLayout = (DrawInsetsFrameLayout) mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
             @Override
             public void onInsetsChanged(Rect insets) {
@@ -176,7 +190,6 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        //   mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
         mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
             @Override
             public void onScrollChanged() {
@@ -187,16 +200,10 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        //   mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-
-       /* if(getArguments().containsKey(ArticleListActivity.TRANSITION_NAME)&&(getArguments().getString(ArticleListActivity.TRANSITION_NAME)!=null)) {
-            mTransitionName = getArguments().getString(ArticleListActivity.TRANSITION_NAME);*/
-        // if(mTransitionName!=null)
+        //set unique transition name for each photo view based on position
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mPhotoView.setTransitionName(getString(R.string.image_resource) + "_" + getArguments().getInt(POSITION));
         }
-        //}
-        //    mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
@@ -213,9 +220,6 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-
-        //   bindViews();
-        //  updateStatusBar();
         return mRootView;
     }
 
@@ -239,13 +243,7 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        // TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
-        // articleTitle = titleView.getText().toString();
-
-        //    TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         mBylineView.setMovementMethod(new LinkMovementMethod());
-        //   TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
-        //   bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -262,34 +260,13 @@ public class ArticleDetailFragment extends Fragment implements
                             + "</font>"));
             mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
             mAspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
-           /* ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                            Bitmap bitmap = imageContainer.getBitmap();
-                            if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
 
-                                mRootView.findViewById(R.id.meta_bar)
-                                        .setBackgroundColor(mMutedColor);
-                                updateStatusBar();
-                            }
-                        }
-
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-
-                        }
-                    });*/
-            //   Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
-
+            //used Picasso for image loading instead of Volley
             RequestCreator requestCreator = Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
             requestCreator.noFade();
             requestCreator.into(mPhotoView, mImageCallback);
 
-
+            //update meta bar color based on image palatte
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -298,8 +275,6 @@ public class ArticleDetailFragment extends Fragment implements
                             if (bitmap != null) {
                                 Palette p = Palette.generate(bitmap, 12);
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                //  mPhotoView.setImageBitmap(imageContainer.getBitmap());
-
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
                                 updateStatusBar();
@@ -311,50 +286,7 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });
-       /*     try     {
-                InputStream imageStream = getActivity().getContentResolver().openInputStream(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
 
-                if (bitmap != null) {
-                    Palette p = Palette.generate(bitmap, 12);
-                    mMutedColor = p.getDarkMutedColor(0xFF333333);
-                    mRootView.findViewById(R.id.meta_bar)
-                            .setBackgroundColor(mMutedColor);
-                    updateStatusBar();
-                }*/
-            //.into(mPhotoView)
-        /*    Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(new Target() {
-                @Override
-                public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                    // Save the bitmap or do something with it here
-
-                    //Set it in the ImageView
-                    mPhotoView.setImageBitmap(bitmap);
-                    if (bitmap != null) {
-                        Palette p = Palette.generate(bitmap, 12);
-                        mMutedColor = p.getDarkMutedColor(0xFF333333);
-                        mRootView.findViewById(R.id.meta_bar)
-                                .setBackgroundColor(mMutedColor);
-                        updateStatusBar();
-                    }
-                    scheduleStartPostponedTransition();
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-
-                }
-            });*/
-
-
-     /*   } catch (Exception ex) {
-            Log.e("MainActivity", "error in creating palette");
-       }*/
         } else {
             mRootView.setVisibility(View.GONE);
             mTitleView.setText("N/A");
@@ -363,16 +295,10 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
+    /**
+     * Start postponed transition
+     */
     private void scheduleStartPostponedTransition() {
-  /*      mPhotoView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        getActivity().startPostponedEnterTransition();
-                        return true;
-                    }
-                });*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mPhotoView.getViewTreeObserver().addOnPreDrawListener(
                     new ViewTreeObserver.OnPreDrawListener() {
@@ -408,12 +334,14 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         bindViews();
-
         scheduleStartPostponedTransition();
 
 
     }
 
+    /**
+     * @param cursorLoader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
@@ -431,25 +359,5 @@ public class ArticleDetailFragment extends Fragment implements
                 : mPhotoView.getHeight() - mScrollY;
     }
 
-/*
 
-    @Override
-    public void setReturnTransition(Transition transition) {
-        super.setReturnTransition(transition);
-        Log.v(LOG_TAG,"in setReturnTransition");
-    }
-
-    @Override
-    public void setExitTransition(Transition transition) {
-        super.setExitTransition(transition);
-        Log.v(LOG_TAG, "in setExitTransition");
-    }
-
-
-
-    @Override
-    public void setExitSharedElementCallback(SharedElementCallback callback) {
-        super.setExitSharedElementCallback(callback);
-        Log.v(LOG_TAG, "in setExitSharedElementCallback");
-    }*/
 }

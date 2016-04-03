@@ -48,6 +48,10 @@ public class ArticleDetailActivity extends AppCompatActivity
     Context mContext;
 
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,28 +63,20 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_article_detail);
-        postponeEnterTransition();
-        getLoaderManager().initLoader(0, null, this);
-      //  mItemPosition = getIntent().getIntExtra("POSITION",0);
-        if (savedInstanceState == null) {
-            if (getIntent() != null && getIntent().getData() != null) {
-                mStartId = ItemsContract.Items.getItemId(getIntent().getData());
-                mSelectedItemId = mStartId;
-           /*     if(getIntent().getStringExtra(ArticleListActivity.TRANSITION_NAME)!=null)
-                {
-                    mTransition = getIntent().getStringExtra(ArticleListActivity.TRANSITION_NAME);
-
-                }*/
-
-            }
+        //Postpone shared element transition until fragment views are loaded
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            postponeEnterTransition();
         }
+        getLoaderManager().initLoader(0, null, this);
 
-        if(getIntent().hasExtra("POSITION"))
+        //Retrieve current item position in grid
+        if(getIntent().hasExtra(ArticleDetailFragment.POSITION))
         {
             mItemPosition = getIntent().getIntExtra("POSITION",0);
         }
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
+        //apply custom tab transitions
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
@@ -88,6 +84,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            /**
+             *
+             * @param state
+             */
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
@@ -96,6 +96,10 @@ public class ArticleDetailActivity extends AppCompatActivity
                         .setDuration(300);
             }
 
+            /**
+             *
+             * @param position
+             */
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
@@ -113,9 +117,8 @@ public class ArticleDetailActivity extends AppCompatActivity
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mSavedInstanceState.putLong("POSITION",mItemPosition);
-               /* Intent intent = new Intent();
-                intent.putExtra("POSITION",mItemPosition);*/
+
+                //Store current item position in Shared Preferences
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt(ArticleDetailFragment.POSITION,mItemPosition);
@@ -137,20 +140,41 @@ public class ArticleDetailActivity extends AppCompatActivity
             });
         }
 
+        if (savedInstanceState == null) {
+            if (getIntent() != null && getIntent().getData() != null) {
+                mStartId = ItemsContract.Items.getItemId(getIntent().getData());
+                mSelectedItemId = mStartId;
 
+            }
+        }
     }
 
+    /**
+     * Save item position in bundle
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(ArticleDetailFragment.POSITION,mItemPosition);
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     *
+     * @param i
+     * @param bundle
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
     }
 
+    /**
+     *
+     * @param cursorLoader
+     * @param cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
@@ -172,12 +196,21 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
     }
 
+    /**
+     *
+     * @param cursorLoader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
 
+    /**
+     *
+     * @param itemId
+     * @param fragment
+     */
     public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
         if (itemId == mSelectedItemId) {
             mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
@@ -190,19 +223,19 @@ public class ArticleDetailActivity extends AppCompatActivity
         mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
     }
 
-    /*@Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(ArticleListActivity.class.getSimpleName(),"in on pause");
-          Intent intent = new Intent();
-                intent.putExtra("POSITION",mItemPosition);
-    }*/
+
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        /**
+         *
+         * @param container
+         * @param position
+         * @param object
+         */
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
@@ -213,6 +246,11 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         }
 
+        /**
+         *
+         * @param position
+         * @return
+         */
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
