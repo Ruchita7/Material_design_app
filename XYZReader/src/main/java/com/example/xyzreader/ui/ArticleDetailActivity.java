@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -28,7 +29,7 @@ import com.example.xyzreader.data.ItemsContract;
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
-public class ArticleDetailActivity extends ActionBarActivity
+public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Cursor mCursor;
@@ -74,6 +75,10 @@ public class ArticleDetailActivity extends ActionBarActivity
             }
         }
 
+        if(getIntent().hasExtra("POSITION"))
+        {
+            mItemPosition = getIntent().getIntExtra("POSITION",0);
+        }
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -113,7 +118,7 @@ public class ArticleDetailActivity extends ActionBarActivity
                 intent.putExtra("POSITION",mItemPosition);*/
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("POSITION",mItemPosition);
+                editor.putInt(ArticleDetailFragment.POSITION,mItemPosition);
                 editor.commit();
                 onSupportNavigateUp();
             }
@@ -137,7 +142,7 @@ public class ArticleDetailActivity extends ActionBarActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putLong("POSITION",mItemPosition);
+        outState.putLong(ArticleDetailFragment.POSITION,mItemPosition);
         super.onSaveInstanceState(outState);
     }
 

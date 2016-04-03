@@ -37,6 +37,9 @@
     <color name="bright_foreground_material_light">@android:color/black</color>
     <color name="button_material_dark">#ff5a595b</color>
     <color name="button_material_light">#ffd6d7d7</color>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="byline_color">#8fff</color>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <color name="cardview_dark_background">#FF202020</color>
@@ -46,6 +49,7 @@
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="deep_orange_200">#FF5722</color>
+    <color name="deep_orange_500">#FF5722</color>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/design/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <color name="design_fab_shadow_end_color">@android:color/transparent</color>
@@ -80,6 +84,7 @@
     <color name="light_blue_200">#81D4FA</color>
     <color name="light_blue_500">#03A9F4</color>
     <color name="light_blue_700">#0288D1</color>
+    <color name="linear_layout_bg">#333</color>
     <color name="ltgray">#ffe0e0e0</color>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
@@ -97,6 +102,7 @@
     <color name="material_grey_900">#ff212121</color>
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/colors.xml -->
     <eat-comment/>
+    <color name="max_width_linear_layout_color">#fff</color>
     <color name="photo_placeholder">#ccc</color>
     <color name="pink_200">#FF4081</color>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
@@ -239,6 +245,9 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/macro_layout.xml -->
+    <eat-comment/>
+    <dimen name="app_bar_layout_height">192dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <dimen name="cardview_compat_inset_shadow">1dp</dimen>
@@ -288,7 +297,7 @@
     <dimen name="detail_inner_horiz_margin">16dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">4dp</dimen>
     <dimen name="detail_metabar_vert_padding">16dp</dimen>
-    <dimen name="detail_photo_height">304dp</dimen>
+    <dimen name="detail_photo_height">240dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="detail_title_text_size">32sp</dimen>
@@ -296,11 +305,15 @@
     <eat-comment/>
     <item format="float" name="disabled_alpha_material_dark" type="dimen">0.30</item>
     <item format="float" name="disabled_alpha_material_light" type="dimen">0.26</item>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/macro_layout.xml -->
+    <eat-comment/>
+    <dimen name="fab_elevation">6dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/dimens.xml -->
     <eat-comment/>
-    <dimen name="fab_elevation">2dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/macro_layout.xml -->
+    <eat-comment/>
+    <dimen name="fab_pressed_elevation">12dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <item format="float" name="highlight_alpha_material_colored" type="dimen">0.26</item>
@@ -309,6 +322,9 @@
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <dimen name="item_touch_helper_max_drag_scroll_per_frame">20dp</dimen>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/macro_layout.xml -->
+    <eat-comment/>
+    <dimen name="linear_layout_elevation">2dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="list_item_margin">8dp</dimen>
@@ -324,6 +340,10 @@
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="recycler_view_side_margin">16dp</dimen>
+    <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values/macro_layout.xml -->
+    <eat-comment/>
+    <dimen name="scrim_height">112dp</dimen>
+    <dimen name="up_button_width">56dp</dimen>
     <!-- From: file:/D:/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values/values.xml -->
     <eat-comment/>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
@@ -1644,7 +1664,7 @@
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/light_blue_500</item>
         <item name="colorPrimaryDark">@color/light_blue_700</item>
-        <item name="colorAccent">@color/pink_200</item>
+        <item name="colorAccent">@color/deep_orange_500</item>
 
     </style>
     <style name="Theme.Bacon.Detail" parent="@style/Theme.Bacon"/>

@@ -22,7 +22,7 @@
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="translationZ"
-                android:valueTo="@dimen/fab_press_translation_z"
+                android:valueTo="@dimen/fab_pressed_elevation"
                 android:valueType="floatType" />
         </set>
     </item>

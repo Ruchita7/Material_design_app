@@ -20,7 +20,7 @@
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/light_blue_500</item>
         <item name="colorPrimaryDark">@color/light_blue_700</item>
-        <item name="colorAccent">@color/pink_200</item>
+        <item name="colorAccent">@color/deep_orange_500</item>
 
     </style>
 

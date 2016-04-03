@@ -47,6 +47,10 @@ import com.squareup.picasso.Target;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
+
 /**
  * A fragment representing a single Article detail screen. This fragment is
  * either contained in a {@link ArticleListActivity} in two-pane mode (on
@@ -54,8 +58,10 @@ import java.util.HashMap;
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
     public static final String ARG_ITEM_ID = "item_id";
-    private static final String TAG = "ArticleDetailFragment";
+    public static final String POSITION="position";
+   // private static final String TAG = "ArticleDetailFragment";
     private static final float PARALLAX_FACTOR = 1.25f;
     final String LOG_TAG = ArticleDetailFragment.class.getSimpleName();
     String mTransitionName;
@@ -63,12 +69,35 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
-    private ObservableScrollView mScrollView;
-    private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
+    @Bind(R.id.scrollview)
+    ObservableScrollView mScrollView;
+    @Bind(R.id.draw_insets_frame_layout)
+    DrawInsetsFrameLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
     private int mTopInset;
-    private View mPhotoContainerView;
-    private ImageView mPhotoView;
+    @Bind(R.id.photo_container)
+    View mPhotoContainerView;
+    @Bind(R.id.photo)
+    ImageView mPhotoView;
+    @Bind(R.id.article_title)
+    TextView mTitleView;
+    @Bind(R.id.article_byline)
+    TextView mBylineView;
+    @Bind(R.id.article_body)
+    TextView mBodyView;
+    private int mScrollY;
+    private boolean mIsCard = false;
+    @BindDimen(R.dimen.detail_card_top_margin)
+     int mStatusBarFullOpacityBottom;
+    private float mAspectRatio;
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ArticleDetailFragment() {
+    }
+
     private final Callback mImageCallback = new Callback() {
         @Override
         public void onSuccess() {
@@ -80,21 +109,10 @@ public class ArticleDetailFragment extends Fragment implements
             scheduleStartPostponedTransition();
         }
     };
-    private int mScrollY;
-    private boolean mIsCard = false;
-    private int mStatusBarFullOpacityBottom;
-    private float mAspectRatio;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ArticleDetailFragment() {
-    }
 
     public static ArticleDetailFragment newInstance(long itemId, int position) {
         Bundle arguments = new Bundle();
-        arguments.putInt("POSITION", position);
+        arguments.putInt(POSITION, position);
         arguments.putLong(ARG_ITEM_ID, itemId);
         //  arguments.putString(ArticleListActivity.TRANSITION_NAME,transitionName);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
@@ -125,8 +143,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
-        mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
-                R.dimen.detail_card_top_margin);
+        //mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
     }
 
@@ -149,8 +166,9 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
+        ButterKnife.bind(this, mRootView);
+
+        // mDrawInsetsFrameLayout = (DrawInsetsFrameLayout) mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
             @Override
             public void onInsetsChanged(Rect insets) {
@@ -158,7 +176,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
+        //   mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
         mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
             @Override
             public void onScrollChanged() {
@@ -169,31 +187,35 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        //   mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
        /* if(getArguments().containsKey(ArticleListActivity.TRANSITION_NAME)&&(getArguments().getString(ArticleListActivity.TRANSITION_NAME)!=null)) {
             mTransitionName = getArguments().getString(ArticleListActivity.TRANSITION_NAME);*/
         // if(mTransitionName!=null)
-
-        mPhotoView.setTransitionName(getString(R.string.image_resource) + "_" + getArguments().getInt("POSITION"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.setTransitionName(getString(R.string.image_resource) + "_" + getArguments().getInt(POSITION));
+        }
         //}
-        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+        //    mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String title = mTitleView.getText() + " " + mBylineView.getText();
+                String body = title + "\n" + mBodyView.getText();
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
-                        .setText("Some sample text")
+                        .setSubject(title)
+                        .setText(body)
                         .getIntent(), getString(R.string.action_share)));
             }
         });
 
 
-     //   bindViews();
-      //  updateStatusBar();
+        //   bindViews();
+        //  updateStatusBar();
         return mRootView;
     }
 
@@ -217,20 +239,20 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
+        // TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
         // articleTitle = titleView.getText().toString();
 
-        TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
-        bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
+        //    TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
+        mBylineView.setMovementMethod(new LinkMovementMethod());
+        //   TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
         //   bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
-            titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
-            bylineView.setText(Html.fromHtml(
+            mTitleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            mBylineView.setText(Html.fromHtml(
                     DateUtils.getRelativeTimeSpanString(
                             mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
                             System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
@@ -238,7 +260,7 @@ public class ArticleDetailFragment extends Fragment implements
                             + " by <font color='#ffffff'>"
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
                             + "</font>"));
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
+            mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
             mAspectRatio = mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
            /* ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
@@ -261,7 +283,7 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });*/
-         //   Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+            //   Uri uri = Uri.parse(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
 
             RequestCreator requestCreator = Picasso.with(getActivity()).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
             requestCreator.noFade();
@@ -335,9 +357,9 @@ public class ArticleDetailFragment extends Fragment implements
        }*/
         } else {
             mRootView.setVisibility(View.GONE);
-            titleView.setText("N/A");
-            bylineView.setText("N/A");
-            bodyView.setText("N/A");
+            mTitleView.setText("N/A");
+            mBylineView.setText("N/A");
+            mBodyView.setText("N/A");
         }
     }
 
@@ -380,7 +402,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mCursor = cursor;
         if (mCursor != null && !mCursor.moveToFirst()) {
-            Log.e(TAG, "Error reading item detail cursor");
+            Log.e(LOG_TAG, "Error reading item detail cursor");
             mCursor.close();
             mCursor = null;
         }

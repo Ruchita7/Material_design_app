@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@color/photo_placeholder"
 
-          />
+            />
 
         <TextView
             android:id="@+id/article_title"
@@ -32,7 +32,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="4" />
-            android:textAppearance="?android:textAppearanceListItem" />
+        android:textAppearance="?android:textAppearanceListItem" />
 
         <TextView
             android:id="@+id/article_subtitle"

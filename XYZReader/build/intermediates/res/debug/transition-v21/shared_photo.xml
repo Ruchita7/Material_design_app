@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <slide xmlns:android="http://schemas.android.com/apk/res/android"
-        android:duration="200"
-        android:interpolator="@android:interpolator/linear_out_slow_in"
-        android:slideEdge="bottom">
-        <targets>
-            <target android:targetId="@id/meta_bar" />
-            <target android:targetId="@id/article_body" />
-        </targets>
-    </slide>
-
-<!-- From: file:/D:/xyzreader/XYZReader/src/main/res/transition-v21/shared_photo.xml -->
+    android:duration="200"
+    android:interpolator="@android:interpolator/linear_out_slow_in"
+    android:slideEdge="bottom">
+    <targets>
+        <target android:targetId="@id/meta_bar" />
+        <target android:targetId="@id/article_body" />
+    </targets>
+</slide><!-- From: file:/D:/xyzreader/XYZReader/src/main/res/transition-v21/shared_photo.xml -->

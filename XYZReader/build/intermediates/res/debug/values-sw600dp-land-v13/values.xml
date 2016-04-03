@@ -3,6 +3,6 @@
     <!-- From: file:/D:/xyzreader/XYZReader/src/main/res/values-sw600dp-land/macro_layout.xml -->
     <eat-comment/>
     <bool name="detail_is_card">true</bool>
-    <dimen name="detail_card_top_margin">256dp</dimen>
+    <dimen name="detail_card_top_margin">420dp</dimen>
     <dimen name="detail_photo_height">600dp</dimen>
 </resources>
