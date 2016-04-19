@@ -4,17 +4,19 @@
 
 This app 
  * Transforms the user experience of a news reading app using Material Design principles.
- * Makes use of consistent and meaningful use of Material Design UI components, fonts, color, motion and surfaces.
- * Used the Design Support library and its provided widget types
  
- ##Prerequisites
+ * Makes use of consistent and meaningful use of Material Design UI components, fonts, color, motion and surfaces.
+ 
+* Used the Design Support library and its provided widget types
+ 
+##Prerequisites
 
 * The app is built with compileSdkVersion 23 and requires [JDK 7](http://oracle.com/technetwork/java/javase/downloads/index.html) or higher
 * Android Studio
 
  The app source code is provided in the course [repository] (https://www.udacity.com/api/nodes/4292653440/supplemental_media/xyzreaderzip/download)
  
- ##Instructions
+##Instructions
 
 ###Get the source codes
 
