@@ -9,6 +9,7 @@ This app
  
 * Used the Design Support library and its provided widget types
  
+![ezgif com-gif-maker](https://cloud.githubusercontent.com/assets/15085932/14648874/11f0e7aa-0682-11e6-8759-b9d076d488e1.gif)
 ##Prerequisites
 
 * The app is built with compileSdkVersion 23 and requires [JDK 7](http://oracle.com/technetwork/java/javase/downloads/index.html) or higher
