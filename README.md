@@ -2,7 +2,8 @@
 
 ##Overview
 
-This app 
+This app is developed to implement material design principles. It 
+
  * Transforms the user experience of a news reading app using Material Design principles.
  
  * Makes use of consistent and meaningful use of Material Design UI components, fonts, color, motion and surfaces.
@@ -25,7 +26,7 @@ Get the source code of the library and example app, by cloning git repository or
 
  * If you use **git**, execute the following command in your workspace directory.
  
-    `$ git clone https://github.com/Ruchita7/Build_it_bigger.git`
+    `$ git clone https://github.com/Ruchita7/Material_design_app.git `
     
 * If you are using Windows, try it on GitBash or Cygwin or something that supports git.
  
